@@ -1,12 +1,7 @@
 function CameraManager(ViewsManager){
      this.ViewsManager = ViewsManager;
-
-     this.$videoElement = document.querySelector("#inputVideo");
-     this.$faceBoxOverlay = document.querySelector("#faceBox");
-     this.faceBoxOverlayContext = this.$faceBoxOverlay.getContext('2d');
-     this.$image = document.querySelector('#theImage');
-     this.$videoCanvas = document.querySelector('#theVideoCanvas');
-     this.videoCanvasContext = this.$videoCanvas.getContext('2d');
+     this.$video = document.getElementById('video');
+     this.tracker = new tracking.ObjectTracker('face');
 
      this.init();
 }
@@ -17,35 +12,39 @@ function CameraManager(ViewsManager){
 CameraManager.prototype.init = function(){
      var self = this;
 
-     FaceDetection();
-     this._initCamera();
+     //init face tracking
+     this._initCameraAndFaceTracking();
 
-     /**
-      * Setup events
-      */
+     //setup loader animation
+     $.busyLoadSetup({ animation: "slide", background: "rgba(255, 152, 0, 0.86)" });
+
+     //setup events
      $('#button').on('click', function(){
           self.takePhoto();
      });
 
-     /**
-      * Setup other things
-      */
-      $.busyLoadSetup({ animation: "slide", background: "rgba(255, 152, 0, 0.86)" });
 }
 
 /**
- * Init camera
+ * Init camera and face tracking (via trackerjs)
  */
-CameraManager.prototype._initCamera = function(){
-     var self = this;
-     if(navigator.mediaDevices.getUserMedia){
-          navigator.mediaDevices.getUserMedia({video: true}).then(function(stream){
-               self.$videoElement.srcObject = stream;
-               console.log("Webcam started.");
-          }).catch(function(err){
-               console.log(`Unable to start webcam: ${err}`);
-          });
-     }
+CameraManager.prototype._initCameraAndFaceTracking = function(){
+     this.tracker.setInitialScale(4);
+     this.tracker.setStepSize(2);
+     this.tracker.setEdgesDensity(0.1);
+     this.faceTracking = tracking.track(this.$video, this.tracker, { camera: true });
+     this.tracker.on('track', function(event) {
+          $('#outlines').empty();
+          for(var i = 0; i < event.data.length; i++){
+               $div = $('<div/>');
+               $div.attr('class', 'outline');
+               $div.css('top', event.data[i].y + 'px');
+               $div.css('left', event.data[i].x + 'px');
+               $div.css('width', event.data[i].width + 'px');
+               $div.css('height', event.data[i].height + 'px');
+               $('#outlines').append($div);
+          }
+     });
 }
 
 /**
@@ -54,24 +53,27 @@ CameraManager.prototype._initCamera = function(){
 CameraManager.prototype.takePhoto = function(){
      var self = this;
 
-     async.waterfall([_showLoader, _takePhoto, _sendToBackend, _hideLoader], function(){
+     async.waterfall([_takePhoto, _showLoader, _sendToBackend, _hideLoader], function(){
 
      });
-
-     /**
-      * Display loader (https://github.com/piccard21/busy-load)
-      */
-     function _showLoader(_cb){
-          $.busyLoadFull('show');
-          return(_cb(false));
-     }
 
      /**
       * Do photo stuff
       */
      function _takePhoto(_cb){
+          self.faceTracking.stop();
+          self.$video.pause();
+          //self.$video.srcObject.getVideoTracks()[0].pause();
           console.log("TAKING A PHOTO");
-          self.ViewsManager.resultsView();
+          //self.ViewsManager.resultsView();
+          return(_cb(false));
+     }
+
+     /**
+      * Display loader (https://github.com/piccard21/busy-load)
+      */
+     function _showLoader(_cb){
+          //$.busyLoadFull('show');
           return(_cb(false));
      }
 
@@ -79,6 +81,7 @@ CameraManager.prototype.takePhoto = function(){
       * Send to backend
       */
      function _sendToBackend(_cb){
+          return(_cb(false));
 
      }
 
@@ -86,7 +89,7 @@ CameraManager.prototype.takePhoto = function(){
       * Hide loader
       */
      function _hideLoader(_cb){
-          $.busyLoadFull('hide');
+          //$.busyLoadFull('hide');
           return(_cb(false));
      }
 

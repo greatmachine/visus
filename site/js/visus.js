@@ -3,27 +3,6 @@ $(document).ready(function(){
      var viewsManager = new ViewsManager();
      var cameraManager = new CameraManager(viewsManager);
 
-     /**
-      * Init webcam
-      */
-
-     var initWebcam = function(){
-          if(navigator.mediaDevices.getUserMedia){
-               navigator.mediaDevices.getUserMedia({video: true}).then(function(stream){
-                    video.srcObject = stream;
-                    console.log("Webcam started.");
-               }).catch(function(err){
-                    console.log(`Unable to start webcam: ${err}`);
-               });
-          }
-     }
-     //initWebcam();
-
-$('#button').on('click', function(){
-     $('#view-camera').removeClass('screen-active');
-     $('#view-results').addClass('screen-active');
-
-});
 
      var oldKnobValue = 1;
 
