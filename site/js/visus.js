@@ -1,7 +1,8 @@
 $(document).ready(function(){
 
      var viewsManager = new ViewsManager();
-     var cameraManager = new CameraManager(viewsManager);
+     //var cameraManager = new CameraManager(viewsManager);
+     var resultsManager = new ResultsManager();
 
 
      var oldKnobValue = 1;
@@ -16,6 +17,7 @@ $(document).ready(function(){
           vertical: true,
           dots: false,
           arrows: false,
+          initialSlide: 1,
           infinite: true
      });
 

@@ -59,8 +59,12 @@
 }
 
 #view-results{
+     position: relative;
      width: 100vw;
      height: 100vh;
+     border: 0;
+     padding: 0;
+     margin: 0;
 }
 
 #view-results .dial-parent{
@@ -73,22 +77,98 @@
 #view-results .result{
      position: relative;
      width: 100%;
+     border: 0;
 }
 
 #view-results .accordion-item{
-     height: 250px;
-     width: 30%;
+     height: 100vh;
+     width: 33%;
      transition: all 500ms ease-in-out;
      float: left;
-     background-color: #ffcece;
+     /*background-color: #171717;*/
+     background-color: #ffcccc;
+
      border-right: 1px solid #fff;
      border-left: 1px solid #fff;
 }
 
-#view-results .accordion-item.collapsed{
+#view-results .result .accordion-item:first-child{
+     border-left: 0 !important;
+}
+
+#view-results .result .accordion-item:last-child{
+     width: 34%;
+     border-right: 0 !important;
+}
+
+#view-results .result .accordion-item.collapsed{
      width: 10%;
 }
 
-#view-results .accordion-item.active{
-     width: 70%;
+#view-results .result .accordion-item.active{
+     width: 80%;
+}
+
+#view-results .accordion-item .details{
+     position: relative;
+     width: 100%;
+     height: 85vh;
+     margin-top: 10px;
+}
+
+#view-results .accordion-item .details .pagination{
+     position: absolute;
+     width: 100%;
+     z-index: 1;
+     margin-top: 30px;
+     transition: all 200ms ease-in-out;
+}
+
+#view-results .result .accordion-item.collapsed .pagination{
+     opacity: 0;
+}
+
+#view-results .accordion-item .details .pagination .prev{
+     float: left;
+     width: 50%;
+     text-align: center;
+}
+
+#view-results .accordion-item .details .pagination .next{
+     float: right;
+     width: 50%;
+     text-align: center;
+}
+
+
+#view-results .accordion-item .details .faces{
+     width: 100%;
+     height: 20vh;
+}
+
+#view-results .accordion-item .details .faces .face-and-info{
+     width: 100%;
+}
+
+#view-results .accordion-item .details .faces .face-and-info .face{
+     width: 100%;
+     text-align: center;
+}
+
+#view-results .accordion-item .details .faces .face-and-info .face img{
+     display: inline-block;
+}
+
+#view-results .accordion-item .details .faces .face-and-info .info{
+     margin: 15px;
+}
+
+#view-results .accordion-item .provider{
+     width: 100%;
+     height: 15vh;
+}
+
+#view-results .accordion-item .provider img{
+     max-height: 10vh;
+     margin: 0 auto;
 }

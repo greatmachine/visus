@@ -65,7 +65,7 @@ CameraManager.prototype.takePhoto = function(){
           self.$video.pause();
           //self.$video.srcObject.getVideoTracks()[0].pause();
           console.log("TAKING A PHOTO");
-          //self.ViewsManager.resultsView();
+          self.ViewsManager.resultsView();
           return(_cb(false));
      }
 
